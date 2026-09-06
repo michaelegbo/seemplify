@@ -30,9 +30,15 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # The QA jobs below are self-contained (checkout, setup-node, install, test)
+  # and need nothing from the Hostinger host, so they run GitHub-hosted. This
+  # repository is public, so those minutes are free, and the 13 jobs this
+  # workflow fans out run concurrently instead of serializing on the single
+  # kvm8-seemplify-worker. Only `deploy` needs the host, and it keeps the
+  # self-hosted runner to itself.
   identity-qa:
     name: Test Identity Provider
-    runs-on: dewinsight-kvm8
+    runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: Identityprovider
@@ -73,7 +79,7 @@ jobs:
 
   recruiter-qa:
     name: Test Recruiter gateway
-    runs-on: dewinsight-kvm8
+    runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: recruiter/backend
@@ -95,7 +101,7 @@ jobs:
 
   learning-qa:
     name: Test Learning platform configuration
-    runs-on: dewinsight-kvm8
+    runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: seemplify-learning
@@ -111,7 +117,7 @@ jobs:
 
   workforce-backend-qa:
     name: Test ${{ matrix.name }} backend
-    runs-on: dewinsight-kvm8
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
@@ -145,7 +151,7 @@ jobs:
 
   workforce-frontend-qa:
     name: Build ${{ matrix.name }} frontend
-    runs-on: dewinsight-kvm8
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
